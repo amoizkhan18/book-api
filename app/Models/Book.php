@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    protected $table = 'mytable'; // 👈 change this to match your real table name
+    protected $table = 'books'; // 👈 change this to match your real table name
 
     protected $fillable = [
         'title',

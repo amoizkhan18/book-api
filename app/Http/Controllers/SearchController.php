@@ -3,57 +3,90 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Book;
-use App\Models\Audiobook;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
     public function search(Request $request)
     {
-        $query = $request->query('query');
-        $limit = $request->query('limit', 5); // Default to 5 results if not provided
+        $query = trim($request->query('query'));
+        $limit = (int) $request->query('limit', 20);
 
         if (!$query) {
-            return response()->json(['message' => 'No search query provided'], 400);
+            return response()->json([], 200);
         }
 
-        // Search books
-        $bookResults = Book::where('title', 'like', '%' . $query . '%')
+        /**
+         * Prefix-based search
+         * - Titles starting with query come first
+         * - Then titles containing query
+         */
+        $results = DB::query()
+            ->fromSub(function ($union) use ($query) {
+
+                // BOOKS
+                $union->selectRaw("
+                    id as bookid,
+                    'book' as type,
+                    title,
+                    author,
+                    genres,
+                    imageurl,
+                    bookdesc as description,
+                    bookurl as url,
+                    CASE
+                        WHEN title LIKE ? THEN 1
+                        WHEN author LIKE ? THEN 2
+                        ELSE 3
+                    END as priority
+                ")
+                ->from('books')
+                ->where(function ($q) use ($query) {
+                    $q->where('title', 'LIKE', "{$query}%")
+                      ->orWhere('author', 'LIKE', "{$query}%")
+                      ->orWhere('title', 'LIKE', "%{$query}%")
+                      ->orWhere('author', 'LIKE', "%{$query}%");
+                })
+
+                ->unionAll(
+
+                    // AUDIOBOOKS
+                    DB::table('audiobooks')
+                        ->selectRaw("
+                            id as bookid,
+                            'audiobook' as type,
+                            title,
+                            author,
+                            genres,
+                            imageurl,
+                            bookdesc as description,
+                            audiolinks as url,
+                            CASE
+                                WHEN title LIKE ? THEN 1
+                                WHEN author LIKE ? THEN 2
+                                ELSE 3
+                            END as priority
+                        ")
+                        ->where(function ($q) use ($query) {
+                            $q->where('title', 'LIKE', "{$query}%")
+                              ->orWhere('author', 'LIKE', "{$query}%")
+                              ->orWhere('title', 'LIKE', "%{$query}%")
+                              ->orWhere('author', 'LIKE', "%{$query}%");
+                        })
+                );
+
+            }, 'search_results')
+            ->setBindings([
+                "{$query}%",
+                "{$query}%",
+                "{$query}%",
+                "{$query}%"
+            ])
+            ->orderBy('priority')
+            ->orderBy('title')
             ->limit($limit)
             ->get();
 
-        // Search audiobooks
-        $audiobookResults = Audiobook::where('title', 'like', '%' . $query . '%')
-            ->limit($limit)
-            ->get();
-
-        // Merge both results
-        $results = $bookResults->map(function ($book) {
-            return [
-                'type' => 'book',
-                'title' => $book->title,
-                'author' => $book->author,
-                'genres' => $book->genres,
-                'imageurl' => $book->imageurl,
-                'description' => $book->bookdesc,
-                'url' => $book->bookurl,
-                'bookid' => $book->id,
-            ];
-        })->merge(
-            $audiobookResults->map(function ($audio) {
-                return [
-                    'type' => 'audiobook',
-                    'title' => $audio->title,
-                    'author' => $audio->author,
-                    'genres' => $audio->genres,
-                    'imageurl' => $audio->imageurl,
-                    'description' => $audio->bookdesc,
-                    'url' => $audio->audiolinks,
-                    'bookid' => $audio->id,
-                ];
-            })
-        );
-
-        return response()->json($results->values());
+        return response()->json($results);
     }
 }
