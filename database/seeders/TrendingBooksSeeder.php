@@ -18,7 +18,7 @@ class TrendingBooksSeeder extends Seeder
 
         $trendingBooks = [
             [
-                'title' => 'Hero Tales from American History',
+                'title' => 'Moiz Tales from American History',
                 'author' => 'Lodge, Henry Cabot, 1850-1924',
                 'bookdesc' => "Always visible content the stories of exemplary Americans who demonstrated exceptional valor and dedication to their ideals. Lodge and Roosevelt highlight the importance of remembering the contributions of these heroes, particularly for the nation's youth. The first chapter introduces George Washington, portraying him as the pivotal figure of the American Revolution, exemplifying leadership and integrity. Through anecdotes of Washington's exploits and character, the narrative emphasizes his impact on American independence and the foundational principles of the nation, setting the tone for the rest of the book, which will dive into the stories of other significant figures like Daniel Boone and George Rogers Clark. (This is an automatically generated summary.)",
                 'imageurl' => 'https://media.librorabookofficial.win/pg1864.cover.medium.jpg',
