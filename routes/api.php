@@ -7,7 +7,9 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NewBookController;
 use App\Http\Controllers\HardController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TrendingBookController;
 
+// Existing routes
 Route::get('/audiobook/{id?}', [AudioBookController::class, 'getAudiobook']);
 
 Route::get('/hardlinks/{id?}', [HardController::class, 'show']);
@@ -26,3 +28,10 @@ Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 
 Route::get('/search', [SearchController::class, 'search']);
 
+// Trending Books Routes
+Route::get('/trending/{id?}', [TrendingBookController::class, 'show']);
+Route::post('/trending/store', [TrendingBookController::class, 'store']);
+Route::post('/trending/update/{id}', [TrendingBookController::class, 'update']);
+Route::post('/trending/delete/{id}', [TrendingBookController::class, 'destroy']);
+Route::post('/trending/toggle/{id}', [TrendingBookController::class, 'toggleActive']);
+Route::post('/trending/reorder', [TrendingBookController::class, 'updateOrder']);
