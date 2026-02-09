@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,79 +11,77 @@ class SearchController extends Controller
         $limit = (int) $request->query('limit', 20);
 
         if (!$query) {
-            return response()->json([], 200);
+            return response()->json([]);
         }
 
-        /**
-         * Prefix-based search
-         * - Titles starting with query come first
-         * - Then titles containing query
-         */
-        $results = DB::query()
-            ->fromSub(function ($union) use ($query) {
+        $startsWithTerm = $query . '%';
+        $containsTerm = '%' . $query . '%';
 
-                // BOOKS
-                $union->selectRaw("
-                    id as bookid,
-                    'book' as type,
-                    title,
-                    author,
-                    genres,
-                    imageurl,
-                    bookdesc as description,
-                    bookurl as url,
-                    CASE
-                        WHEN title LIKE ? THEN 1
-                        WHEN author LIKE ? THEN 2
-                        ELSE 3
-                    END as priority
-                ")
-                ->from('books')
-                ->where(function ($q) use ($query) {
-                    $q->where('title', 'LIKE', "{$query}%")
-                      ->orWhere('author', 'LIKE', "{$query}%")
-                      ->orWhere('title', 'LIKE', "%{$query}%")
-                      ->orWhere('author', 'LIKE', "%{$query}%");
-                })
-
-                ->unionAll(
-
-                    // AUDIOBOOKS
-                    DB::table('audiobooks')
-                        ->selectRaw("
-                            id as bookid,
-                            'audiobook' as type,
-                            title,
-                            author,
-                            genres,
-                            imageurl,
-                            bookdesc as description,
-                            audiolinks as url,
-                            CASE
-                                WHEN title LIKE ? THEN 1
-                                WHEN author LIKE ? THEN 2
-                                ELSE 3
-                            END as priority
-                        ")
-                        ->where(function ($q) use ($query) {
-                            $q->where('title', 'LIKE', "{$query}%")
-                              ->orWhere('author', 'LIKE', "{$query}%")
-                              ->orWhere('title', 'LIKE', "%{$query}%")
-                              ->orWhere('author', 'LIKE', "%{$query}%");
-                        })
-                );
-
-            }, 'search_results')
-            ->setBindings([
-                "{$query}%",
-                "{$query}%",
-                "{$query}%",
-                "{$query}%"
-            ])
-            ->orderBy('priority')
-            ->orderBy('title')
-            ->limit($limit)
-            ->get();
+        $results = DB::select("
+            SELECT * FROM (
+                (
+                    SELECT 
+                        id as bookid,
+                        'book' as type,
+                        title,
+                        author,
+                        genres,
+                        imageurl,
+                        bookdesc as description,
+                        bookurl as url,
+                        NULL as audiolinks,
+                        CASE
+                            WHEN title LIKE ? THEN 1
+                            WHEN author LIKE ? THEN 2
+                            WHEN title LIKE ? THEN 3
+                            WHEN author LIKE ? THEN 4
+                            ELSE 5
+                        END as priority
+                    FROM books
+                    WHERE title LIKE ? 
+                       OR author LIKE ? 
+                       OR title LIKE ? 
+                       OR author LIKE ?
+                    LIMIT ?
+                )
+                UNION ALL
+                (
+                    SELECT 
+                        id as bookid,
+                        'audiobook' as type,
+                        title,
+                        author,
+                        genres,
+                        imageurl,
+                        bookdesc as description,
+                        bookurl as url,
+                        audiolinks,
+                        CASE
+                            WHEN title LIKE ? THEN 1
+                            WHEN author LIKE ? THEN 2
+                            WHEN title LIKE ? THEN 3
+                            WHEN author LIKE ? THEN 4
+                            ELSE 5
+                        END as priority
+                    FROM audiobooks
+                    WHERE title LIKE ? 
+                       OR author LIKE ? 
+                       OR title LIKE ? 
+                       OR author LIKE ?
+                    LIMIT ?
+                )
+            ) AS combined_results
+            ORDER BY priority ASC, title ASC
+            LIMIT ?
+        ", [
+            $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
+            $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
+            $limit,
+            $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
+            $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
+            $limit,
+            $limit
+        ]);
 
         return response()->json($results);
     }
