@@ -1,0 +1,22 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Fri 2026-01-16 00:35:28 PKT; 14h ago
+       Docs: man:nginx(8)
+    Process: 93204 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 93206 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 111408 ExecReload=/usr/sbin/nginx -g daemon on; master_process on; -s reload (code=exited, status=0/SUCCESS)
+   Main PID: 93207 (nginx)
+      Tasks: 2 (limit: 2310)
+     Memory: 4.7M
+        CPU: 206ms
+     CGroup: /system.slice/nginx.service
+             ├─ 93207 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             └─111409 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+
+Jan 16 00:35:28 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: nginx.service: Deactivated successfully.
+Jan 16 00:35:28 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: Stopped A high performance web server and a reverse proxy server.
+Jan 16 00:35:28 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jan 16 00:35:28 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: Started A high performance web server and a reverse proxy server.
+Jan 16 15:31:22 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: Reloading A high performance web server and a reverse proxy server...
+Jan 16 15:31:22 ubuntu-s-1vcpu-2gb-lon1-01 nginx[111408]: nginx: [warn] conflicting server name "_" on 0.0.0.0:80, ignored
+Jan 16 15:31:22 ubuntu-s-1vcpu-2gb-lon1-01 systemd[1]: Reloaded A high performance web server and a reverse proxy server.

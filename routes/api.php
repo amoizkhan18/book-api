@@ -8,6 +8,7 @@ use App\Http\Controllers\NewBookController;
 use App\Http\Controllers\HardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrendingBookController;
+use App\Http\Controllers\PopularBookController;
 
 // Existing routes
 Route::get('/audiobook/{id?}', [AudioBookController::class, 'getAudiobook']);
@@ -35,3 +36,11 @@ Route::post('/trending/update/{id}', [TrendingBookController::class, 'update']);
 Route::post('/trending/delete/{id}', [TrendingBookController::class, 'destroy']);
 Route::post('/trending/toggle/{id}', [TrendingBookController::class, 'toggleActive']);
 Route::post('/trending/reorder', [TrendingBookController::class, 'updateOrder']);
+
+// Popular Books Routes
+Route::get('/popular/{id?}', [PopularBookController::class, 'show']);
+Route::post('/popular/store', [PopularBookController::class, 'store']);
+Route::post('/popular/update/{id}', [PopularBookController::class, 'update']);
+Route::post('/popular/delete/{id}', [PopularBookController::class, 'destroy']);
+Route::post('/popular/toggle/{id}', [PopularBookController::class, 'toggleActive']);
+Route::post('/popular/reorder', [PopularBookController::class, 'updateOrder']);
