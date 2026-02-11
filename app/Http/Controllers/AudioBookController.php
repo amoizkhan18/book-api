@@ -28,8 +28,8 @@ class AudioBookController extends Controller
                         'author' => $audiobook->author,
                         'bookdesc' => $audiobook->bookdesc,
                         'imageurl' => $audiobook->imageurl,
-                        'audiolinks' => $this->sanitizeLinks($audiobook->audiolinks),
-                        'genres' => $this->sanitizeGenres($audiobook->genres),
+                        'audiolinks' => $audiobook->audiolinks, // Let the accessor handle it
+                        'genres' => $audiobook->genres, // Let the accessor handle it
                     ];
                 });
 
@@ -40,58 +40,48 @@ class AudioBookController extends Controller
     }
 
     /**
-     * Sanitize audiolinks - handles both string and array input
+     * Get a single audiobook or all audiobooks
+     * GET /api/audiobook
+     * GET /api/audiobook/{id}
      */
-    private function sanitizeLinks($links)
+    public function getAudiobook($id = null)
     {
-        // If it's already an array, return it
-        if (is_array($links)) {
-            return array_map(function ($link) {
-                return trim($link, " \t\n\r\0\x0B\"\\");
-            }, $links);
-        }
-
-        // If it's a JSON string, decode it
-        if (is_string($links)) {
-            $decoded = json_decode($links, true);
-            if (is_array($decoded)) {
-                return array_map(function ($link) {
-                    return trim($link, " \t\n\r\0\x0B\"\\");
-                }, $decoded);
+        try {
+            if ($id) {
+                $audiobook = Audiobook::find($id);
+                
+                if (!$audiobook) {
+                    return response()->json(['message' => 'Audiobook not found'], 404);
+                }
+                
+                return response()->json([
+                    'bookid' => $audiobook->id,
+                    'title' => $audiobook->title,
+                    'author' => $audiobook->author,
+                    'bookdesc' => $audiobook->bookdesc,
+                    'imageurl' => $audiobook->imageurl,
+                    'audiolinks' => $audiobook->audiolinks,
+                    'genres' => $audiobook->genres,
+                    'bookurl' => $audiobook->bookurl,
+                ]);
             }
 
-            // If it's a comma-separated string, explode it
-            return array_map(function ($link) {
-                return trim($link, " \t\n\r\0\x0B\"\\");
-            }, explode(',', $links));
+            // Get all audiobooks
+            $audiobooks = Audiobook::all()->map(function ($audiobook) {
+                return [
+                    'bookid' => $audiobook->id,
+                    'title' => $audiobook->title,
+                    'author' => $audiobook->author,
+                    'bookdesc' => $audiobook->bookdesc,
+                    'imageurl' => $audiobook->imageurl,
+                    'audiolinks' => $audiobook->audiolinks,
+                    'genres' => $audiobook->genres,
+                ];
+            });
+
+            return response()->json($audiobooks);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // Fallback: return empty array
-        return [];
-    }
-
-    /**
-     * Sanitize genres - handles both string and array input
-     */
-    private function sanitizeGenres($genres)
-    {
-        // If it's already an array, return it
-        if (is_array($genres)) {
-            return $genres;
-        }
-
-        // If it's a JSON string, decode it
-        if (is_string($genres)) {
-            $decoded = json_decode($genres, true);
-            if (is_array($decoded)) {
-                return $decoded;
-            }
-
-            // If it's a comma-separated string, explode it
-            return array_map('trim', explode(',', $genres));
-        }
-
-        // Fallback: return array with single value
-        return [$genres];
     }
 }
