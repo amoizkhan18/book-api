@@ -22,7 +22,7 @@ $trendingAudiobooks = [
         'title' => 'The Art of War',
         'author' => 'Sun Tzu',
         'bookdesc' => 'A timeless guide to strategy, leadership, and victory. This classic reveals powerful insights on warfare, planning, and decision-making that remain influential in business, politics, and everyday life.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/Art-of-War-Sun-Tzu.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/theartofwar.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/art_war_ps_librivox/artofwar_01_sun_64kb.mp3",
             "http://www.archive.org/download/art_war_ps_librivox/artofwar_02_sun_64kb.mp3",
@@ -39,7 +39,7 @@ $trendingAudiobooks = [
         'title' => 'War and Peace',
         'author' => 'Leo Tolstoy',
         'bookdesc' => 'A sweeping epic of love, war, and destiny set during the Napoleonic era. Tolstoy masterfully portrays families navigating passion, loss, and the human spirit in times of historic upheaval.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/War-and-Peace-Book-01-1805.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/warandpeace.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/war_and_peace_01_librivox/war_and_peace_01_01_tolstoy_64kb.mp3"
         ]),
@@ -53,7 +53,7 @@ $trendingAudiobooks = [
         'title' => 'The Prince',
         'author' => 'Niccolò Machiavelli',
         'bookdesc' => 'A bold and pragmatic guide to political power and leadership. Machiavelli explores the qualities of rulers and the realities of governing in a turbulent world.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/81.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/theprince.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/prince_bn_librivox/prince_01_machiavelli_64kb.mp3"
         ]),
@@ -67,7 +67,7 @@ $trendingAudiobooks = [
         'title' => 'The Divine Comedy – Purgatory',
         'author' => 'Dante Alighieri',
         'bookdesc' => 'Continuing Dante’s epic journey through the afterlife, this part explores the realm of Purgatory. Guided by Virgil, Dante ascends the terraces of purification toward spiritual redemption.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/gottliche-Komodie-Das-Fegefeuer.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/thedivinecomedy.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/fegefeuer_1010_librivox/komoedie2_01_dante_64kb.mp3"
         ]),
@@ -81,7 +81,7 @@ $trendingAudiobooks = [
         'title' => 'The Count of Monte Cristo',
         'author' => 'Alexandre Dumas',
         'bookdesc' => 'Wrongfully imprisoned, Edmond Dantès escapes and reinvents himself to seek justice. A gripping tale of betrayal, revenge, and redemption across Europe.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/monte_cristo.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/thecountofmonte.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_001_dumas_64kb.mp3"
         ]),
@@ -95,7 +95,7 @@ $trendingAudiobooks = [
         'title' => 'Tao Teh King',
         'author' => 'Laozi',
         'bookdesc' => 'A foundational text of Taoist philosophy exploring harmony, simplicity, and the nature of existence. A timeless guide to living in balance with the Tao.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/Tao-Teh-King.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/taoteching.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/tao_teh_king_librivox/tao_teh_king_01-09_lao-tze_64kb.mp3"
         ]),
@@ -109,7 +109,7 @@ $trendingAudiobooks = [
         'title' => 'Siddhartha',
         'author' => 'Hermann Hesse',
         'bookdesc' => 'A profound journey of self-discovery and enlightenment. Follow Siddhartha as he seeks meaning, inner peace, and spiritual awakening.',
-        'imageurl' => 'https://www.loyalbooks.com/image/detail/Siddhartha-Hermann-Hesse.jpg',
+        'imageurl' => 'https://media.librorabookofficial.win/sidharta.png',
         'audiolinks' => json_encode([
             "http://www.archive.org/download/siddhartha_ap_librivox/siddhartha_01_hesse_64kb.mp3"
         ]),
