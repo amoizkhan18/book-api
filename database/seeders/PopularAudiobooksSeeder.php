@@ -16,59 +16,100 @@ class PopularAudiobooksSeeder extends Seeder
         // Clear existing data
         DB::table('popular_audiobooks')->truncate();
 
-        $popularAudiobooks = [
-            [
-                'title' => 'Gulliver s Travels',
-                'author' => 'By: Jonathan Swift (1667-1745)',
-                'bookdesc' => 'A satirical voyage through strange and wondrous lands, where encounters with tiny people, giants, and other fantastical societies reveal sharp truths about human nature, politics, and pride.',
-                'imageurl' => 'https://www.loyalbooks.com/image/detail/Gulliver-s-Travels.jpg',
-                'audiolinks' => json_encode([
-                    'https://media.librorabookofficial.win/gulliverstravels_00_swift_64kb.mp3',
-                    'https://media.librorabookofficial.win/gulliverstravels_01_swift_64kb.mp3',
-                    'https://media.librorabookofficial.win/gulliverstravels_02_swift_64kb.mp3',
-                    'https://media.librorabookofficial.win/gulliverstravels_03_swift_64kb.mp3',
-                    'https://media.librorabookofficial.win/gulliverstravels_04_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Fantasy']),
-                'color' => '#24150E',
-                'order' => 1,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'Tarzan of the Apes',
-                'author' => 'By: Edgar Rice Burroughs (1875-1950)',
-                'bookdesc' => 'Orphaned in the African jungle, a boy is raised by great apes, growing into a powerful and resourceful man. Torn between the wild world that shaped him and the human heritage he discovers, he must choose where he truly belongs.',
-                'imageurl' => 'https://www.loyalbooks.com/image/detail/Tarzan-of-the-Apes.jpg',
-                'audiolinks' => json_encode([
-                    'https://media.librorabookofficial.win/tarzan_of_the_apes_01_burroughs_64kb.mp3',
-                    'https://media.librorabookofficial.win/tarzan_of_the_apes_02_burroughs_64kb.mp3',
-                    'https://media.librorabookofficial.win/tarzan_of_the_apes_03_burroughs_64kb.mp3',
-                    'https://media.librorabookofficial.win/tarzan_of_the_apes_04_burroughs_64kb.mp3',
-                    'https://media.librorabookofficial.win/tarzan_of_the_apes_05_burroughs_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Fantasy']),
-                'color' => '#0E0520',
-                'order' => 2,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'Anthem',
-                'author' => 'By: Ayn Rand (1905-1982)',
-                'bookdesc' => 'In a dark future where individuality is forbidden, one man rediscovers the power of the self. Defying a world that speaks only in "we," he seeks freedom, knowledge, and the right to say "I."',
-                'imageurl' => 'https://www.loyalbooks.com/image/detail/Anthem.jpg',
-                'audiolinks' => json_encode([
-                    'https://media.librorabookofficial.win/anthem_01_rand_64kb.mp3',
-                    'https://media.librorabookofficial.win/anthem_02_rand_64kb.mp3',
-                    'https://media.librorabookofficial.win/anthem_03_rand_64kb.mp3',
-                    'https://media.librorabookofficial.win/anthem_04_rand_64kb.mp3',
-                    'https://media.librorabookofficial.win/anthem_05_rand_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Fantasy']),
-                'color' => '#280F03',
-                'order' => 3,
-                'is_active' => true,
-            ],
-        ];
+$popularAudiobooks = [
+
+    [
+        'title' => 'Pride and Prejudice',
+        'author' => 'Jane Austen',
+        'bookdesc' => 'A timeless romantic classic following Elizabeth Bennet as she navigates love, society, and misunderstanding in 19th-century England. A brilliant blend of wit, romance, and social commentary.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Pride-and-Prejudice-Jane-Austen.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/prideandprejudice_1005_librivox/prideandprejudice_01_austen_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Romance', 'Classic Literature']),
+        'order' => 1,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'Meditations',
+        'author' => 'Marcus Aurelius',
+        'bookdesc' => 'A powerful collection of personal reflections by the Roman Emperor and Stoic philosopher. This timeless work explores discipline, virtue, and finding peace within life’s challenges.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Meditations.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/meditations_0708_librivox/meditations_00_marcusaurelius_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Philosophy', 'Non-fiction']),
+        'order' => 2,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'Dracula',
+        'author' => 'Bram Stoker',
+        'bookdesc' => 'A chilling gothic masterpiece that follows Count Dracula’s dark quest in England. Filled with suspense and horror, this novel defined the modern vampire legend.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Dracula-Bram-Stoker.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/dracula_1006_librivox/dracula_01_stoker_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Horror', 'Gothic Fiction']),
+        'order' => 3,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'Crime and Punishment',
+        'author' => 'Fyodor Dostoyevsky',
+        'bookdesc' => 'A psychological masterpiece exploring guilt, morality, and redemption. Follow Raskolnikov’s intense inner struggle in this profound classic of world literature.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Crime-and-Punishment.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/crime_and_punishment_0902_librivox/crime_and_punishment_01_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Psychological Fiction', 'Classic Literature']),
+        'order' => 4,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'As a Man Thinketh',
+        'author' => 'James Allen',
+        'bookdesc' => 'A timeless self-development classic revealing how thoughts shape character and destiny. An inspiring guide to mindset, discipline, and purposeful living.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/as-a-man-thinketh-by-james-allen.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/as_a_man_thinketh_mc_librivox/asamanthinketh_0_allen_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Self-Development', 'Philosophy']),
+        'order' => 5,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'The Adventures of Huckleberry Finn',
+        'author' => 'Mark Twain',
+        'bookdesc' => 'Join Huck Finn on an unforgettable journey down the Mississippi River. A powerful coming-of-age story filled with adventure, humor, and social insight.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/28.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/huckleberry_mfs_librivox/huckleberry_finn_01_twain_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Adventure', 'Classic Literature']),
+        'order' => 6,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'The Return of Sherlock Holmes',
+        'author' => 'Arthur Conan Doyle',
+        'bookdesc' => 'The legendary detective returns in a thrilling collection of mysteries. Joined by Dr. Watson, Sherlock Holmes once again unravels London’s most puzzling crimes.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Return-of-Sherlock-Holmes.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/return_holmes_0708_librivox/returnofholmes_01_doyle_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Mystery', 'Detective Fiction']),
+        'order' => 7,
+        'is_active' => true,
+    ],
+
+];
 
         foreach ($popularAudiobooks as $audiobook) {
             PopularAudiobook::create($audiobook);

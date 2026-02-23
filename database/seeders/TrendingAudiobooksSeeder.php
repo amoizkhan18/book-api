@@ -16,98 +16,110 @@ class TrendingAudiobooksSeeder extends Seeder
         // Clear existing data
         DB::table('trending_audiobooks')->truncate();
 
-        $trendingAudiobooks = [
-            [
-                'title' => 'ABc Tales from American History',
-                'author' => 'Lodge, Henry Cabot, 1850-1924',
-                'bookdesc' => "Always visible content the stories of exemplary Americans who demonstrated exceptional valor and dedication to their ideals. Lodge and Roosevelt highlight the importance of remembering the contributions of these heroes, particularly for the nation's youth. The first chapter introduces George Washington, portraying him as the pivotal figure of the American Revolution, exemplifying leadership and integrity. Through anecdotes of Washington's exploits and character, the narrative emphasizes his impact on American independence and the foundational principles of the nation, setting the tone for the rest of the book, which will dive into the stories of other significant figures like Daniel Boone and George Rogers Clark. (This is an automatically generated summary.)",
-                'imageurl' => 'https://media.librorabookofficial.win/pg1864.cover.medium.jpg',
-                'audiolinks' => json_encode([
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_01_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_02_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_03_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_04_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_05_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_06_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['History', 'Biographies & Memoirs']),
-                'color' => '#24150E',
-                'order' => 1,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'The Tale of Benjamin Bunny',
-                'author' => 'Potter, Beatrix, 1866-1943',
-                'bookdesc' => "Always visible content Bunny finds his cousin Peter dressed in a red handkerchief, lamenting the loss of his clothing while they are both hiding from Mr. McGregor's cat. Together, they venture into the garden to recover Peter's coat and shoes, facing humorous challenges along the way. Their adventure becomes a battle of wits against the perilous cat and the intimidating Mr. McGregor. Ultimately, the story highlights the cleverness of Benjamin as he navigates the garden with a mix of courage and mischief, culminating in a rescue orchestrated by his father, Mr. Bunny, who drives the cat away and ensures the safe return of the two young rabbits home. (This is an automatically generated summary.)",
-                'imageurl' => 'https://media.librorabookofficial.win/pg14407.cover.medium.jpg',
-                'audiolinks' => json_encode([
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_01_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_02_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_03_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_04_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_05_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_06_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Children', 'Adventure']),
-                'color' => '#0E0520',
-                'order' => 2,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'Life Is a Dream',
-                'author' => 'Calderón de la Barca, Pedro, 1600-1681',
-                'bookdesc' => "The opening of \"Life Is a Dream\" sets a dramatic tone, introducing Rosaura, a lady from Muscovy disguised as a man, along with her attendant Fife, who are both navigating a tumultuous landscape. Rosaura speaks with passion and determination about matters of revenge, hinting at a backstory steeped in vengeance. As they venture further into Poland, they encounter Segismund, who has recently been awakened from a deep sleep following an artistic and philosophical treatment of his troubled fate. Segismund's confusion upon awakening in a palace instead of the tower where he was imprisoned raises questions about identity, the nature of dreams versus reality, and human aspirations. This lays the groundwork for the exploration of whether life itself is merely a dream, posing questions that resonate throughout the play. (This is an automatically generated summary.)",
-                'imageurl' => 'https://media.librorabookofficial.win/pg2587.cover.medium.jpg',
-                'audiolinks' => json_encode([
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_01_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_02_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_03_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_04_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_05_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_06_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Dramas & Plays', 'Philosophy']),
-                'color' => '#24150E',
-                'order' => 3,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'Belgian Fairy Tales',
-                'author' => 'Griffis, William Elliot, 1843-1928',
-                'bookdesc' => "Always visible content to the vibrant landscape of Belgium, highlighting its diverse races and rich heritage. It centers on a young boy named Emile in the Ardennes region, who tends to his father's horses, particularly a colt named Baldwin. The narrative sets the stage for the tumultuous backdrop of World War I, as Emile prepares to join the fight for his country. Through a delicate combination of realism and fantasy, the beginning offers a glimpse into the joys of youth and the hardships of war, laying a foundation for the magical tales that follow. (This is an automatically generated summary.)",
-                'imageurl' => 'https://media.librorabookofficial.win/pg67256.cover.medium.jpg',
-                'audiolinks' => json_encode([
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_01_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_02_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_03_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_04_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_05_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_06_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Fairytales']),
-                'color' => '#0E0520',
-                'order' => 4,
-                'is_active' => true,
-            ],
-            [
-                'title' => 'Red shadows',
-                'author' => 'Howard, Robert E. (Robert Ervin), 1906-1936',
-                'bookdesc' => "Always visible content tales. The narrative follows Solomon Kane as he confronts various villains, particularly Le Loup, a cruel bandit leader who causes terror and death in the regions he plunders. The plot unfolds with intense action as Kane pursues Le Loup after the villain's men commit heinous acts against innocent people, culminating in a violent confrontation. The tension heightens as Kane navigates through treacherous jungles and encounters the supernatural, including resurrection and powerful ju-ju magic. Each story in this collection captures the dark, brooding mood characteristic of Howard's writing, emphasizing Kane's relentless pursuit of justice and the moral complexities of the world he inhabits. (This is an automatically generated summary.)",
-                'imageurl' => 'https://media.librorabookofficial.win/pg70570.cover.medium.jpg',
-                'audiolinks' => json_encode([
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_01_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_02_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_03_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_04_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_05_swift_64kb.mp3',
-                    'http://www.archive.org/download/gulliver_ld_librivox/gulliverstravels_06_swift_64kb.mp3',
-                ]),
-                'genres' => json_encode(['Fantasy']),
-                'color' => '#280F03',
-                'order' => 5,
-                'is_active' => true,
-            ],
-        ];
+$trendingAudiobooks = [
+
+    [
+        'title' => 'The Art of War',
+        'author' => 'Sun Tzu',
+        'bookdesc' => 'A timeless guide to strategy, leadership, and victory. This classic reveals powerful insights on warfare, planning, and decision-making that remain influential in business, politics, and everyday life.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Art-of-War-Sun-Tzu.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/art_war_ps_librivox/artofwar_01_sun_64kb.mp3",
+            "http://www.archive.org/download/art_war_ps_librivox/artofwar_02_sun_64kb.mp3",
+            "http://www.archive.org/download/art_war_ps_librivox/artofwar_03_sun_64kb.mp3",
+            "http://www.archive.org/download/art_war_ps_librivox/artofwar_04_sun_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Philosophy', 'Strategy']),
+        'color' => '#1E2A38',
+        'order' => 1,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'War and Peace',
+        'author' => 'Leo Tolstoy',
+        'bookdesc' => 'A sweeping epic of love, war, and destiny set during the Napoleonic era. Tolstoy masterfully portrays families navigating passion, loss, and the human spirit in times of historic upheaval.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/War-and-Peace-Book-01-1805.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/war_and_peace_01_librivox/war_and_peace_01_01_tolstoy_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Historical Fiction', 'Classic Literature']),
+        'color' => '#3A1F1F',
+        'order' => 2,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'The Prince',
+        'author' => 'Niccolò Machiavelli',
+        'bookdesc' => 'A bold and pragmatic guide to political power and leadership. Machiavelli explores the qualities of rulers and the realities of governing in a turbulent world.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/81.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/prince_bn_librivox/prince_01_machiavelli_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Political Philosophy']),
+        'color' => '#2F2F2F',
+        'order' => 3,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'The Divine Comedy – Purgatory',
+        'author' => 'Dante Alighieri',
+        'bookdesc' => 'Continuing Dante’s epic journey through the afterlife, this part explores the realm of Purgatory. Guided by Virgil, Dante ascends the terraces of purification toward spiritual redemption.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/gottliche-Komodie-Das-Fegefeuer.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/fegefeuer_1010_librivox/komoedie2_01_dante_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Epic Poetry', 'Religious Literature']),
+        'color' => '#4B2E2E',
+        'order' => 4,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'The Count of Monte Cristo',
+        'author' => 'Alexandre Dumas',
+        'bookdesc' => 'Wrongfully imprisoned, Edmond Dantès escapes and reinvents himself to seek justice. A gripping tale of betrayal, revenge, and redemption across Europe.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/monte_cristo.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_001_dumas_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Adventure', 'Historical Fiction']),
+        'color' => '#3C2F2F',
+        'order' => 5,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'Tao Teh King',
+        'author' => 'Laozi',
+        'bookdesc' => 'A foundational text of Taoist philosophy exploring harmony, simplicity, and the nature of existence. A timeless guide to living in balance with the Tao.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Tao-Teh-King.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/tao_teh_king_librivox/tao_teh_king_01-09_lao-tze_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Philosophy', 'Spirituality']),
+        'color' => '#244D3E',
+        'order' => 6,
+        'is_active' => true,
+    ],
+
+    [
+        'title' => 'Siddhartha',
+        'author' => 'Hermann Hesse',
+        'bookdesc' => 'A profound journey of self-discovery and enlightenment. Follow Siddhartha as he seeks meaning, inner peace, and spiritual awakening.',
+        'imageurl' => 'https://www.loyalbooks.com/image/detail/Siddhartha-Hermann-Hesse.jpg',
+        'audiolinks' => json_encode([
+            "http://www.archive.org/download/siddhartha_ap_librivox/siddhartha_01_hesse_64kb.mp3"
+        ]),
+        'genres' => json_encode(['Spiritual Fiction', 'Philosophy']),
+        'color' => '#2E3F4F',
+        'order' => 7,
+        'is_active' => true,
+    ],
+
+];
 
         foreach ($trendingAudiobooks as $audiobook) {
             TrendingAudiobook::create($audiobook);
