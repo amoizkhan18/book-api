@@ -60,7 +60,7 @@ class AuthorController extends Controller
     }
 
     /**
-     * Get books by author name
+     * Get books by author name (SMART MATCHING)
      * GET /api/authors/{name}/books
      */
     public function getBooksByAuthor($name)
@@ -69,7 +69,7 @@ class AuthorController extends Controller
             // Decode the author name from URL
             $authorName = urldecode($name);
             
-            // Get author details
+            // Find author by display name (what user clicked)
             $author = Author::where('name', $authorName)
                 ->where('is_active', true)
                 ->first();
@@ -78,15 +78,25 @@ class AuthorController extends Controller
                 return response()->json(['message' => 'Author not found'], 404);
             }
 
-            // Get books by this author
-            $books = Book::where('author', $authorName)
-                ->select('bookid', 'title', 'author', 'bookdesc', 'imageurl', 'bookurl', 'genres', 'totalpages')
+            // Get books using the db_name field (matches books table)
+            // Uses LIKE to handle different formats
+            $books = Book::where('author', 'LIKE', "%{$author->db_name}%")
                 ->get()
                 ->map(function ($book) {
+                    // Ensure genres is an array
                     if (is_string($book->genres)) {
                         $book->genres = json_decode($book->genres, true) ?? [$book->genres];
                     }
-                    return $book;
+                    return [
+                        'bookid' => $book->bookid ?? "{$book->title}-{$book->author}",
+                        'title' => $book->title,
+                        'author' => $book->author,
+                        'bookdesc' => $book->bookdesc,
+                        'imageurl' => $book->imageurl,
+                        'bookurl' => $book->bookurl,
+                        'genres' => $book->genres,
+                        'totalpages' => $book->totalpages ?? null,
+                    ];
                 });
 
             return response()->json([
@@ -114,6 +124,7 @@ class AuthorController extends Controller
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
+                'db_name' => 'required|string|max:255',
                 'image' => 'nullable|string',
                 'description' => 'nullable|string',
                 'color' => 'nullable|string|max:20',
@@ -146,6 +157,7 @@ class AuthorController extends Controller
 
             $validated = $request->validate([
                 'name' => 'sometimes|string|max:255',
+                'db_name' => 'sometimes|string|max:255',
                 'image' => 'nullable|string',
                 'description' => 'nullable|string',
                 'color' => 'nullable|string|max:20',
