@@ -28,7 +28,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Shakespeare, William, 1564-1616',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/williamshakespeare.jpg.jpeg',
 
                 'description' => 'English playwright, poet, and actor, widely regarded as the greatest writer in the English language',
 
@@ -46,7 +46,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Dickens, Charles, 1812-1870',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/charlesdickens.jpg.jpeg',
 
                 'description' => 'Victorian novelist who created some of the world\'s best-known fictional characters',
 
@@ -64,7 +64,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Twain, Mark, 1835-1910',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/marktwain.jpg.jpeg',
 
                 'description' => 'American writer, humorist, and lecturer best known for The Adventures of Tom Sawyer',
 
@@ -82,7 +82,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Shelley, Mary Wollstonecraft, 1797-1851',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/marywollstonecraft.jpg.jpeg',
 
                 'description' => 'English novelist who wrote the Gothic novel Frankenstein',
 
@@ -100,7 +100,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Austen, Jane, 1775-1817',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/janeausten.jpg.jpeg',
 
                 'description' => 'English novelist known for her six major novels including Pride and Prejudice',
 
@@ -118,7 +118,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Doyle, Arthur Conan, 1859-1930',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/arthurconan.jpg.jpeg',
 
                 'description' => 'British writer best known for his detective fiction featuring Sherlock Holmes',
 
@@ -136,7 +136,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Dumas, Alexandre, 1802-1870',
 
-                'image' => 'https://media.librorabookofficial.win/Rectangle91.png',
+                'image' => 'https://media.librorabookofficial.win/alexandredumas.jpg.jpeg',
 
                 'description' => 'French writer best known for The Three Musketeers and The Count of Monte Cristo',
 
