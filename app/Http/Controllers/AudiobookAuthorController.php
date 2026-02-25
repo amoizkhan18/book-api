@@ -59,7 +59,7 @@ class AudiobookAuthorController extends Controller
     }
 
     /**
-     * Get audiobooks by author name
+     * Get audiobooks by author name (SMART MATCHING)
      * GET /api/audiobook-authors/{name}/audiobooks
      */
     public function getAudiobooksByAuthor($name)
@@ -68,7 +68,7 @@ class AudiobookAuthorController extends Controller
             // Decode the author name from URL
             $authorName = urldecode($name);
             
-            // Get author details
+            // Find author by display name (what user clicked)
             $author = AudiobookAuthor::where('name', $authorName)
                 ->where('is_active', true)
                 ->first();
@@ -77,9 +77,9 @@ class AudiobookAuthorController extends Controller
                 return response()->json(['message' => 'Author not found'], 404);
             }
 
-            // Get audiobooks by this author
-            $audiobooks = Audiobook::where('author', $authorName)
-                ->select('bookid', 'title', 'author', 'bookdesc', 'imageurl', 'audiolinks', 'genres')
+            // Get audiobooks using the db_name field (matches audiobooks table)
+            // Uses LIKE to handle different formats
+            $audiobooks = Audiobook::where('author', 'LIKE', "%{$author->db_name}%")
                 ->get()
                 ->map(function ($audiobook) {
                     // Ensure genres and audiolinks are arrays
@@ -87,9 +87,17 @@ class AudiobookAuthorController extends Controller
                         $audiobook->genres = json_decode($audiobook->genres, true) ?? [$audiobook->genres];
                     }
                     if (is_string($audiobook->audiolinks)) {
-                        $audiobook->audiolinks = json_decode($audiobook->audiolinks, true) ?? [$audiobook->audiolinks];
+                        $audiobook->audiolinks = json_decode($audiobook->audiolinks, true) ?? [];
                     }
-                    return $audiobook;
+                    return [
+                        'bookid' => $audiobook->id ?? "{$audiobook->title}-{$audiobook->author}",
+                        'title' => $audiobook->title,
+                        'author' => $audiobook->author,
+                        'bookdesc' => $audiobook->bookdesc,
+                        'imageurl' => $audiobook->imageurl,
+                        'audiolinks' => $audiobook->audiolinks,
+                        'genres' => $audiobook->genres,
+                    ];
                 });
 
             return response()->json([
@@ -117,6 +125,7 @@ class AudiobookAuthorController extends Controller
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
+                'db_name' => 'required|string|max:255',
                 'image' => 'nullable|string',
                 'description' => 'nullable|string',
                 'color' => 'nullable|string|max:20',
@@ -149,6 +158,7 @@ class AudiobookAuthorController extends Controller
 
             $validated = $request->validate([
                 'name' => 'sometimes|string|max:255',
+                'db_name' => 'sometimes|string|max:255',
                 'image' => 'nullable|string',
                 'description' => 'nullable|string',
                 'color' => 'nullable|string|max:20',

@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('audiobook_authors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('image')->nullable();
+            $table->string('name'); // Display name: "William Shakespeare"
+            $table->string('db_name'); // Database name: "Shakespeare, William, 1564-1616"
+            $table->string('image')->nullable();
             $table->text('description')->nullable();
-            $table->string('color', 20)->default('#1A1A1A');
+            $table->string('color')->default('#1A1A1A');
             $table->integer('display_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
