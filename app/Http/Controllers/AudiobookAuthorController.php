@@ -79,8 +79,7 @@ class AudiobookAuthorController extends Controller
 
             // Get audiobooks using the db_name field (matches audiobooks table)
             // Uses LIKE to handle different formats
-	$audiobooks = Audiobook::where('author', 'LIKE', $author->db_name . '%')
-            
+            $audiobooks = Audiobook::where('author', 'LIKE', "%{$author->db_name}%")
                 ->get()
                 ->map(function ($audiobook) {
                     // Ensure genres and audiolinks are arrays
