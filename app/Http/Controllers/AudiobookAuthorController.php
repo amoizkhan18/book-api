@@ -62,60 +62,60 @@ class AudiobookAuthorController extends Controller
      * Get audiobooks by author name (SMART MATCHING)
      * GET /api/audiobook-authors/{name}/audiobooks
      */
-    public function getAudiobooksByAuthor($name)
-    {
-        try {
-            // Decode the author name from URL
-            $authorName = urldecode($name);
-            
-            // Find author by display name (what user clicked)
-            $author = AudiobookAuthor::where('name', $authorName)
-                ->where('is_active', true)
-                ->first();
+public function getAudiobooksByAuthor($name)
+{
+    try {
+        $authorName = urldecode($name);
+        
+        $author = AudiobookAuthor::where('name', $authorName)
+            ->where('is_active', true)
+            ->first();
 
-            if (!$author) {
-                return response()->json(['message' => 'Author not found'], 404);
-            }
-
-            // Get audiobooks using the db_name field (matches audiobooks table)
-            // Uses LIKE to handle different formats
-            $audiobooks = Audiobook::where('author', 'LIKE', "%{$author->db_name}%")
-                ->get()
-                ->map(function ($audiobook) {
-                    // Ensure genres and audiolinks are arrays
-                    if (is_string($audiobook->genres)) {
-                        $audiobook->genres = json_decode($audiobook->genres, true) ?? [$audiobook->genres];
-                    }
-                    if (is_string($audiobook->audiolinks)) {
-                        $audiobook->audiolinks = json_decode($audiobook->audiolinks, true) ?? [];
-                    }
-                    return [
-                        'bookid' => $audiobook->id ?? "{$audiobook->title}-{$audiobook->author}",
-                        'title' => $audiobook->title,
-                        'author' => $audiobook->author,
-                        'bookdesc' => $audiobook->bookdesc,
-                        'imageurl' => $audiobook->imageurl,
-                        'audiolinks' => $audiobook->audiolinks,
-                        'genres' => $audiobook->genres,
-                    ];
-                });
-
-            return response()->json([
-                'author' => [
-                    'id' => $author->id,
-                    'name' => $author->name,
-                    'image' => $author->image,
-                    'description' => $author->description,
-                    'color' => $author->color,
-                ],
-                'audiobooks' => $audiobooks,
-                'total_audiobooks' => $audiobooks->count()
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if (!$author) {
+            return response()->json(['message' => 'Author not found'], 404);
         }
-    }
 
+        $dbName = trim($author->db_name);
+        \Log::info('db_name: [' . $dbName . '] hex: ' . bin2hex($dbName));
+
+$audiobooks = Audiobook::where('author', 'LIKE', '%' . $dbName . '%')->get()->map(function ($audiobook) {
+    if (is_string($audiobook->genres)) {
+        $audiobook->genres = json_decode($audiobook->genres, true) ?? [$audiobook->genres];
+    }
+    if (is_string($audiobook->audiolinks)) {
+        preg_match_all('/https?:\/\/[^\s",]+/', $audiobook->audiolinks, $matches);
+        $audiobook->audiolinks = $matches[0] ?? [];
+    }
+    return [
+        'bookid'     => $audiobook->id,
+        'title'      => $audiobook->title,
+        'author'     => $audiobook->author,
+        'bookdesc'   => $audiobook->bookdesc,
+        'imageurl'   => $audiobook->imageurl,
+        'audiolinks' => $audiobook->audiolinks,
+        'genres'     => $audiobook->genres,
+    ];
+});
+
+        \Log::info('audiobooks found: ' . $audiobooks->count());
+
+        return response()->json([
+            'author' => [
+                'id'          => $author->id,
+                'name'        => $author->name,
+                'image'       => $author->image,
+                'description' => $author->description,
+                'color'       => $author->color,
+            ],
+            'audiobooks'       => $audiobooks,
+            'total_audiobooks' => $audiobooks->count(),
+            'total_pages'      => 1,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
     /**
      * Store a new audiobook author (Admin)
      * POST /api/audiobook-authors/store
