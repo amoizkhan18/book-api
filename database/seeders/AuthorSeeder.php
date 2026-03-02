@@ -46,7 +46,7 @@ class AuthorSeeder extends Seeder
 
                 'db_name' => 'Dickens, Charles, 1812-1870',
 
-                'image' => 'https://media.librorabookofficial.win/charle.png',
+                'image' => 'https://media.librorabookofficial.win/charles.png',
 
                 'description' => 'Victorian novelist who created some of the world\'s best-known fictional characters',
 

@@ -17,7 +17,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'William Shakespeare',
                 'db_name' => 'Shakespeare, William, 1564-1616',
-                'image' => 'https://media.librorabookofficial.win/williamshakespeare.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/william.png',
                 'description' => 'English playwright, poet, and actor, widely regarded as the greatest writer in the English language',
                 'color' => '#2B6CB0',
                 'display_order' => 1,
@@ -26,7 +26,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Charles Dickens',
                 'db_name' => 'Dickens, Charles, 1812-1870',
-                'image' => 'https://media.librorabookofficial.win/charlesdickens.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/charles.png',
                 'description' => 'Victorian novelist who created some of the world\'s best-known fictional characters',
                 'color' => '#4A5568',
                 'display_order' => 2,
@@ -35,7 +35,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Mark Twain',
                 'db_name' => 'Twain, Mark, 1835-1910',
-                'image' => 'https://media.librorabookofficial.win/marktwain.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/mark.png',
                 'description' => 'American writer, humorist, and lecturer best known for The Adventures of Tom Sawyer',
                 'color' => '#D97706',
                 'display_order' => 3,
@@ -44,7 +44,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Mary Shelley',
                 'db_name' => 'Shelley, Mary Wollstonecraft, 1797-1851',
-                'image' => 'https://media.librorabookofficial.win/marywollstonecraft.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/mary.png',
                 'description' => 'English novelist who wrote the Gothic novel Frankenstein',
                 'color' => '#7C3AED',
                 'display_order' => 4,
@@ -53,7 +53,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Jane Austen',
                 'db_name' => 'Austen, Jane, 1775-1817',
-                'image' => 'https://media.librorabookofficial.win/janeausten.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/jane.png',
                 'description' => 'English novelist known for her six major novels including Pride and Prejudice',
                 'color' => '#EC4899',
                 'display_order' => 5,
@@ -62,7 +62,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Arthur Conan Doyle',
                 'db_name' => 'Doyle, Arthur Conan, 1859-1930',
-                'image' => 'https://media.librorabookofficial.win/arthurconan.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/arthur.png',
                 'description' => 'British writer best known for his detective fiction featuring Sherlock Holmes',
                 'color' => '#059669',
                 'display_order' => 6,
@@ -71,7 +71,7 @@ class AudiobookAuthorsSeeder extends Seeder
             [
                 'name' => 'Alexandre Dumas',
                 'db_name' => 'Dumas, Alexandre, 1802-1870',
-                'image' => 'https://media.librorabookofficial.win/alexandredumas.jpg.jpeg',
+                'image' => 'https://media.librorabookofficial.win/alexandre.png',
                 'description' => 'French writer best known for The Three Musketeers and The Count of Monte Cristo',
                 'color' => '#DC2626',
                 'display_order' => 7,
