@@ -8,6 +8,7 @@ class SearchController extends Controller
     {
         $query = trim($request->query('query'));
         $limit = (int) $request->query('limit', 20);
+$offset = (int) $request->query('offset', 0);
 
         if (!$query) {
             return response()->json([]);
@@ -42,7 +43,7 @@ class SearchController extends Controller
                        OR LOWER(REPLACE(author, 'By: ', '')) LIKE ? 
                        OR LOWER(title) LIKE ? 
                        OR LOWER(REPLACE(author, 'By: ', '')) LIKE ?
-                    LIMIT ?
+                    LIMIT ?  OFFSET ?
                 )
                 UNION ALL
                 (
@@ -68,7 +69,7 @@ class SearchController extends Controller
                        OR LOWER(REPLACE(author, 'By: ', '')) LIKE ? 
                        OR LOWER(title) LIKE ? 
                        OR LOWER(REPLACE(author, 'By: ', '')) LIKE ?
-                    LIMIT ?
+                    LIMIT ?  OFFSET ?
                 )
             ) AS combined_results
             ORDER BY priority ASC, title ASC
@@ -77,10 +78,12 @@ class SearchController extends Controller
             $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
             $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
             $limit,
+$offset, 
             $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
             $startsWithTerm, $startsWithTerm, $containsTerm, $containsTerm,
             $limit,
-            $limit
+	    $offset,          
+   $limit
         ]);
 
         // Parse audiolinks for audiobook results
