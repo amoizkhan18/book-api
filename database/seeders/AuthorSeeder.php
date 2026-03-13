@@ -32,7 +32,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'English playwright, poet, and actor, widely regarded as the greatest writer in the English language',
 
-                'color' => '#2B6CB0',
+                'color' => '#4A5568',
 
                 'display_order' => 1,
 
@@ -68,7 +68,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'American writer, humorist, and lecturer best known for The Adventures of Tom Sawyer',
 
-                'color' => '#D97706',
+                'color' => '#4A5568',
 
                 'display_order' => 3,
 
@@ -86,7 +86,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'English novelist who wrote the Gothic novel Frankenstein',
 
-                'color' => '#7C3AED',
+                'color' => '#4A5568',
 
                 'display_order' => 4,
 
@@ -104,7 +104,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'English novelist known for her six major novels including Pride and Prejudice',
 
-                'color' => '#EC4899',
+                'color' => '#4A5568',
 
                 'display_order' => 5,
 
@@ -122,7 +122,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'British writer best known for his detective fiction featuring Sherlock Holmes',
 
-                'color' => '#059669',
+                'color' => '#4A5568',
 
                 'display_order' => 6,
 
@@ -140,7 +140,7 @@ class AuthorSeeder extends Seeder
 
                 'description' => 'French writer best known for The Three Musketeers and The Count of Monte Cristo',
 
-                'color' => '#DC2626',
+                'color' => '#4A5568',
 
                 'display_order' => 7,
 
