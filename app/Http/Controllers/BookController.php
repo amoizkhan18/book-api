@@ -8,22 +8,30 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-       public function show(Request $request, $id = null)
-    {
-        if (!$id) {
-            // Fetch all books
-            $books = Book::all();
-            return response()->json($books);
-        } else {
-            // Fetch a single book by ID
-            $book = Book::find($id);
-            if (!$book) {
-                return response()->json(['message' => 'Book not found'], 404);
-            }
-            return response()->json($book);
+public function show(Request $request, $id = null)
+{
+    if (!$id) {
+        $books = Book::all();
+        return response()->json($books);
+    } else {
+        $book = Book::find($id);
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
         }
-    }
 
+        // ✅ Return raw attributes to avoid JSON encoding issues with genres
+        return response()->json([
+            'id'       => $book->id,
+            'title'    => $book->title,
+            'author'   => $book->author,
+            'bookdesc' => $book->bookdesc,
+            'imageurl' => $book->imageurl,
+            'bookurl'  => $book->bookurl,
+            'downurl'  => $book->downurl,
+            'genres'   => $book->getRawOriginal('genres'),
+        ]);
+    }
+}
 
     public function showgenres(Request $request, $genres = null)
     {

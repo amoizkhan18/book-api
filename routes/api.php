@@ -13,6 +13,8 @@ use App\Http\Controllers\TrendingAudiobookController;
 use App\Http\Controllers\PopularAudiobookController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\AudiobookAuthorController;
+use App\Http\Controllers\DeviceTokenController;
+use App\Http\Controllers\UserActivityController;
 
 
 // Existing routes
@@ -89,3 +91,19 @@ Route::post('/audiobook-authors/update/{id}', [AudiobookAuthorController::class,
 Route::post('/audiobook-authors/delete/{id}', [AudiobookAuthorController::class, 'destroy']);
 Route::post('/audiobook-authors/toggle/{id}', [AudiobookAuthorController::class, 'toggleActive']);
 Route::post('/audiobook-authors/reorder', [AudiobookAuthorController::class, 'updateOrder']);
+
+// Device Token Routes
+Route::post('devices/register', [DeviceTokenController::class, 'register']);
+Route::get('devices/tokens', [DeviceTokenController::class, 'getAllTokens']);
+Route::get('devices/active', [DeviceTokenController::class, 'getActiveTokens']);
+Route::post('devices/notify/all', [DeviceTokenController::class, 'sendToAll']);
+Route::post('devices/notify/device', [DeviceTokenController::class, 'sendToDevice']);
+Route::post('devices/notify/multiple', [DeviceTokenController::class, 'sendToMultiple']);
+Route::post('devices/notify/active', [DeviceTokenController::class, 'sendToActive']);
+
+Route::post('/user/activity',                       [UserActivityController::class, 'updateActivity']);
+Route::get('/notifications/continue-reminders',     [UserActivityController::class, 'getPendingContinueReminders']);
+Route::get('/notifications/daily-pick',             [UserActivityController::class, 'getDailyPick']);
+Route::post('/notifications/set-daily-pick', [UserActivityController::class, 'setDailyPick']);
+Route::post('/notifications/new-content', [UserActivityController::class, 'sendNewContentNotification']);
+Route::post('/notifications/send-segmented', [UserActivityController::class, 'sendSegmented']);

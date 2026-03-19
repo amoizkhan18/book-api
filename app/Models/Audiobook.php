@@ -1,20 +1,34 @@
 <?php
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
+
 class Audiobook extends Model
 {
-    use HasFactory;
     protected $table = 'audiobooks';
-    public $timestamps = false; 
+
+    public $timestamps = false;
+
     protected $fillable = [
         'title',
         'author',
         'imageurl',
-        'extra',
         'genres',
         'bookdesc',
         'bookurl',
         'audiolinks',
     ];
+
+    protected $casts = [
+        'genres' => 'array',
+    ];
+
+    public function getGenresAttribute($value)
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return $decoded ?? [$value];
+        }
+        return $value;
+    }
 }
