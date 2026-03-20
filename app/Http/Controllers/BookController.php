@@ -8,18 +8,16 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-public function show(Request $request, $id = null)
-{
-    if (!$id) {
-        $books = Book::all();
-        return response()->json($books);
-    } else {
-        $book = Book::find($id);
-        if (!$book) {
-            return response()->json(['message' => 'Book not found'], 404);
+    public function show(Request $request, $id = null)
+    {
+        if (!$id) {
+            $books = Book::all();
+            return response()->json($books);
         }
 
-        // ✅ Return raw attributes to avoid JSON encoding issues with genres
+        $book = Book::find($id);
+        if (!$book) return response()->json(['message' => 'Book not found'], 404);
+
         return response()->json([
             'id'       => $book->id,
             'title'    => $book->title,
@@ -31,42 +29,32 @@ public function show(Request $request, $id = null)
             'genres'   => $book->getRawOriginal('genres'),
         ]);
     }
-}
 
     public function showgenres(Request $request, $genres = null)
     {
         if (!$genres) {
-            // Fetch all books
-            $books = Book::all();
-            return response()->json($books);
-        } else {
-            // Fetch books by genres
-            $books = Book::where('Genres', 'LIKE', '%' . $genres . '%')->get();
-            if ($books->isEmpty()) {
-                return response()->json(['message' => 'Books not found'], 404);
-            }
-            return response()->json($books);
+            return response()->json(Book::all());
         }
+
+        // ✅ Cache per genre — key like "books_genre_romance"
+        $cacheKey = 'books_genre_' . strtolower($genres);
+        $books = $this->cachedResponse($cacheKey, function () use ($genres) {
+            return Book::where('Genres', 'LIKE', '%' . $genres . '%')->get();
+        });
+
+        if ($books->isEmpty()) return response()->json(['message' => 'Books not found'], 404);
+        return response()->json($books);
     }
 
-       public function searchBooks($search = null)
+    public function searchBooks($search = null)
     {
-        if ($search) {
-            // Search logic for both tables
-            $bookResults = Book::where('title', 'like', '%' . $search . '%')->get();
-            $newBookResults = NewBook::where('title', 'like', '%' . $search . '%')->get();
-    
-            // Merging and returning the results
-            $mergedResults = $bookResults->merge($newBookResults);
-    
-            if ($mergedResults->isEmpty()) {
-                return response()->json(['message' => 'No results found for "' . $search . '"']);
-            }
-    
-            return response()->json($mergedResults);
-        } else {
-            return response()->json(['message' => 'No search query provided']);
-        }
-    }
+        if (!$search) return response()->json(['message' => 'No search query provided']);
 
+        $bookResults = Book::where('title', 'like', '%' . $search . '%')->get();
+        $newBookResults = NewBook::where('title', 'like', '%' . $search . '%')->get();
+        $mergedResults = $bookResults->merge($newBookResults);
+
+        if ($mergedResults->isEmpty()) return response()->json(['message' => 'No results found for "' . $search . '"']);
+        return response()->json($mergedResults);
+    }
 }

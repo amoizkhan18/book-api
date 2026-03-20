@@ -8,28 +8,18 @@ use Illuminate\Http\Request;
 
 class AudiobookAuthorController extends Controller
 {
-    /**
-     * Get all audiobook authors or a specific author by ID
-     * GET /api/audiobook-authors
-     * GET /api/audiobook-authors/{id}
-     */
     public function index($id = null)
     {
         try {
             if ($id) {
                 $author = AudiobookAuthor::where('is_active', true)->find($id);
-                
-                if (!$author) {
-                    return response()->json(['message' => 'Author not found'], 404);
-                }
-                
+                if (!$author) return response()->json(['message' => 'Author not found'], 404);
                 return response()->json($author);
             }
 
-            // Get all active authors ordered by display_order
-            $authors = AudiobookAuthor::where('is_active', true)
-                ->orderBy('display_order', 'asc')
-                ->get();
+            $authors = $this->cachedResponse('audiobook_authors_all', function () {
+                return AudiobookAuthor::where('is_active', true)->orderBy('display_order', 'asc')->get();
+            });
 
             return response()->json($authors);
         } catch (\Exception $e) {
@@ -37,20 +27,15 @@ class AudiobookAuthorController extends Controller
         }
     }
 
-    /**
-     * Get top N audiobook authors (default: 3)
-     * GET /api/audiobook-authors/top
-     * GET /api/audiobook-authors/top?limit=5
-     */
     public function topAuthors(Request $request)
     {
         try {
             $limit = $request->query('limit', 3);
-            
-            $authors = AudiobookAuthor::where('is_active', true)
-                ->orderBy('display_order', 'asc')
-                ->limit($limit)
-                ->get();
+            $cacheKey = 'audiobook_authors_top_' . $limit;
+
+            $authors = $this->cachedResponse($cacheKey, function () use ($limit) {
+                return AudiobookAuthor::where('is_active', true)->orderBy('display_order', 'asc')->limit($limit)->get();
+            });
 
             return response()->json($authors);
         } catch (\Exception $e) {
@@ -58,68 +43,51 @@ class AudiobookAuthorController extends Controller
         }
     }
 
-    /**
-     * Get audiobooks by author name (SMART MATCHING)
-     * GET /api/audiobook-authors/{name}/audiobooks
-     */
-public function getAudiobooksByAuthor($name)
-{
-    try {
-        $authorName = urldecode($name);
-        
-        $author = AudiobookAuthor::where('name', $authorName)
-            ->where('is_active', true)
-            ->first();
+    public function getAudiobooksByAuthor($name)
+    {
+        try {
+            $authorName = urldecode($name);
+            $cacheKey = 'audiobook_author_books_' . md5($authorName);
 
-        if (!$author) {
-            return response()->json(['message' => 'Author not found'], 404);
+            $result = $this->cachedResponse($cacheKey, function () use ($authorName) {
+                $author = AudiobookAuthor::where('name', $authorName)->where('is_active', true)->first();
+                if (!$author) return null;
+
+                $dbName = trim($author->db_name);
+                $audiobooks = Audiobook::where('author', 'LIKE', '%' . $dbName . '%')->get()->map(function ($audiobook) {
+                    if (is_string($audiobook->genres)) {
+                        $audiobook->genres = json_decode($audiobook->genres, true) ?? [$audiobook->genres];
+                    }
+                    if (is_string($audiobook->audiolinks)) {
+                        preg_match_all('/https?:\/\/[^\s",]+/', $audiobook->audiolinks, $matches);
+                        $audiobook->audiolinks = $matches[0] ?? [];
+                    }
+                    return [
+                        'bookid' => $audiobook->id,
+                        'title' => $audiobook->title,
+                        'author' => $audiobook->author,
+                        'bookdesc' => $audiobook->bookdesc,
+                        'imageurl' => $audiobook->imageurl,
+                        'audiolinks' => $audiobook->audiolinks,
+                        'genres' => $audiobook->genres,
+                    ];
+                });
+
+                return [
+                    'author' => ['id' => $author->id, 'name' => $author->name, 'image' => $author->image, 'description' => $author->description, 'color' => $author->color],
+                    'audiobooks' => $audiobooks,
+                    'total_audiobooks' => $audiobooks->count(),
+                    'total_pages' => 1,
+                ];
+            });
+
+            if (!$result) return response()->json(['message' => 'Author not found'], 404);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $dbName = trim($author->db_name);
-        \Log::info('db_name: [' . $dbName . '] hex: ' . bin2hex($dbName));
-
-$audiobooks = Audiobook::where('author', 'LIKE', '%' . $dbName . '%')->get()->map(function ($audiobook) {
-    if (is_string($audiobook->genres)) {
-        $audiobook->genres = json_decode($audiobook->genres, true) ?? [$audiobook->genres];
     }
-    if (is_string($audiobook->audiolinks)) {
-        preg_match_all('/https?:\/\/[^\s",]+/', $audiobook->audiolinks, $matches);
-        $audiobook->audiolinks = $matches[0] ?? [];
-    }
-    return [
-        'bookid'     => $audiobook->id,
-        'title'      => $audiobook->title,
-        'author'     => $audiobook->author,
-        'bookdesc'   => $audiobook->bookdesc,
-        'imageurl'   => $audiobook->imageurl,
-        'audiolinks' => $audiobook->audiolinks,
-        'genres'     => $audiobook->genres,
-    ];
-});
 
-        \Log::info('audiobooks found: ' . $audiobooks->count());
-
-        return response()->json([
-            'author' => [
-                'id'          => $author->id,
-                'name'        => $author->name,
-                'image'       => $author->image,
-                'description' => $author->description,
-                'color'       => $author->color,
-            ],
-            'audiobooks'       => $audiobooks,
-            'total_audiobooks' => $audiobooks->count(),
-            'total_pages'      => 1,
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-}
-    /**
-     * Store a new audiobook author (Admin)
-     * POST /api/audiobook-authors/store
-     */
     public function store(Request $request)
     {
         try {
@@ -131,31 +99,19 @@ $audiobooks = Audiobook::where('author', 'LIKE', '%' . $dbName . '%')->get()->ma
                 'color' => 'nullable|string|max:20',
                 'display_order' => 'nullable|integer',
             ]);
-
             $author = AudiobookAuthor::create($validated);
-
-            return response()->json([
-                'message' => 'Audiobook author created successfully',
-                'author' => $author
-            ], 201);
+            $this->clearCache(['audiobook_authors_all', 'audiobook_authors_top_3', 'audiobook_authors_top_7']);
+            return response()->json(['message' => 'Audiobook author created successfully', 'author' => $author], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Update an audiobook author (Admin)
-     * POST /api/audiobook-authors/update/{id}
-     */
     public function update(Request $request, $id)
     {
         try {
             $author = AudiobookAuthor::find($id);
-
-            if (!$author) {
-                return response()->json(['message' => 'Author not found'], 404);
-            }
-
+            if (!$author) return response()->json(['message' => 'Author not found'], 404);
             $validated = $request->validate([
                 'name' => 'sometimes|string|max:255',
                 'db_name' => 'sometimes|string|max:255',
@@ -164,79 +120,48 @@ $audiobooks = Audiobook::where('author', 'LIKE', '%' . $dbName . '%')->get()->ma
                 'color' => 'nullable|string|max:20',
                 'display_order' => 'nullable|integer',
             ]);
-
             $author->update($validated);
-
-            return response()->json([
-                'message' => 'Audiobook author updated successfully',
-                'author' => $author
-            ]);
+            $this->clearCache(['audiobook_authors_all', 'audiobook_authors_top_3', 'audiobook_authors_top_7']);
+            return response()->json(['message' => 'Audiobook author updated successfully', 'author' => $author]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Delete an audiobook author (Admin)
-     * POST /api/audiobook-authors/delete/{id}
-     */
     public function destroy($id)
     {
         try {
             $author = AudiobookAuthor::find($id);
-
-            if (!$author) {
-                return response()->json(['message' => 'Author not found'], 404);
-            }
-
+            if (!$author) return response()->json(['message' => 'Author not found'], 404);
             $author->delete();
-
+            $this->clearCache(['audiobook_authors_all', 'audiobook_authors_top_3', 'audiobook_authors_top_7']);
             return response()->json(['message' => 'Audiobook author deleted successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Toggle audiobook author active status (Admin)
-     * POST /api/audiobook-authors/toggle/{id}
-     */
     public function toggleActive($id)
     {
         try {
             $author = AudiobookAuthor::find($id);
-
-            if (!$author) {
-                return response()->json(['message' => 'Author not found'], 404);
-            }
-
+            if (!$author) return response()->json(['message' => 'Author not found'], 404);
             $author->is_active = !$author->is_active;
             $author->save();
-
-            return response()->json([
-                'message' => 'Audiobook author status updated',
-                'author' => $author
-            ]);
+            $this->clearCache(['audiobook_authors_all', 'audiobook_authors_top_3', 'audiobook_authors_top_7']);
+            return response()->json(['message' => 'Audiobook author status updated', 'author' => $author]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Reorder audiobook authors (Admin)
-     * POST /api/audiobook-authors/reorder
-     * Body: [{"id": 1, "display_order": 1}, {"id": 2, "display_order": 2}]
-     */
     public function updateOrder(Request $request)
     {
         try {
-            $orders = $request->all();
-
-            foreach ($orders as $item) {
-                AudiobookAuthor::where('id', $item['id'])
-                    ->update(['display_order' => $item['display_order']]);
+            foreach ($request->all() as $item) {
+                AudiobookAuthor::where('id', $item['id'])->update(['display_order' => $item['display_order']]);
             }
-
+            $this->clearCache(['audiobook_authors_all', 'audiobook_authors_top_3', 'audiobook_authors_top_7']);
             return response()->json(['message' => 'Order updated successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
