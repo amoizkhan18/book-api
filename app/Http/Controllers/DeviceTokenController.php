@@ -16,13 +16,53 @@ class DeviceTokenController extends Controller
         return $factory->createMessaging();
     }
 
-    // Register or update device token
+    private function buildMessage(string $token, Notification $notification, Request $request): CloudMessage
+    {
+        $msg = CloudMessage::withTarget('token', $token)
+            ->withNotification($notification)
+            ->withData([
+                'deep_link' => $request->deep_link ?? '',
+                'image'     => $request->image ?? '',
+            ]);
+
+        if ($request->image) {
+            $msg = $msg->withAndroidConfig([
+                'notification' => [
+                    'image'      => $request->image,
+                    'channel_id' => 'new_content',
+                ],
+            ]);
+        }
+
+        return $msg;
+    }
+
+    private function sendToTokens(array $tokens, Notification $notification, Request $request): array
+    {
+        $sent   = 0;
+        $failed = 0;
+
+        foreach ($tokens as $token) {
+            try {
+                $msg = $this->buildMessage($token, $notification, $request);
+                $this->getMessaging()->send($msg);
+                $sent++;
+            } catch (\Exception $e) {
+                $failed++;
+                if (str_contains($e->getMessage(), 'not found') || str_contains($e->getMessage(), 'invalid')) {
+                    DeviceToken::where('fcm_token', $token)->delete();
+                }
+            }
+        }
+
+        return ['sent' => $sent, 'failed' => $failed];
+    }
+
+    // ✅ Register or update device token
     public function register(Request $request)
     {
         try {
-            $request->validate([
-                'fcm_token' => 'required|string',
-            ]);
+            $request->validate(['fcm_token' => 'required|string']);
 
             $token = DeviceToken::updateOrCreate(
                 ['fcm_token' => $request->fcm_token],
@@ -35,31 +75,26 @@ class DeviceTokenController extends Controller
                 ]
             );
 
-            return response()->json([
-                'message' => 'Token registered successfully',
-                'token'   => $token,
-            ], 200);
-
+            return response()->json(['message' => 'Token registered successfully', 'token' => $token], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Get all tokens
+    // ✅ Get all tokens
     public function getAllTokens()
     {
         try {
             $tokens = DeviceToken::select('fcm_token', 'device_model', 'last_active_at')
                 ->orderBy('last_active_at', 'desc')
                 ->get();
-
             return response()->json($tokens);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Get tokens active in last 7 days
+    // ✅ Get active tokens
     public function getActiveTokens()
     {
         try {
@@ -67,14 +102,13 @@ class DeviceTokenController extends Controller
                 ->where('last_active_at', '>=', now()->subDays(7))
                 ->get()
                 ->pluck('fcm_token');
-
             return response()->json($tokens);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Send to specific device
+    // ✅ Send to specific device
     public function sendToDevice(Request $request)
     {
         try {
@@ -86,33 +120,17 @@ class DeviceTokenController extends Controller
                 'deep_link' => 'nullable|string',
             ]);
 
-            $messaging = $this->getMessaging();
-
             $notification = Notification::create($request->title, $request->message);
-
-            $message = CloudMessage::withTarget('token', $request->fcm_token)
-                ->withNotification($notification)
-                ->withData([
-                    'deep_link' => $request->deep_link ?? '',
-                    'image'     => $request->image ?? '',
-                ]);
-
-            if ($request->image) {
-                $message = $message->withAndroidConfig([
-                    'notification' => ['image' => $request->image],
-                ]);
-            }
-
-            $messaging->send($message);
+            $msg = $this->buildMessage($request->fcm_token, $notification, $request);
+            $this->getMessaging()->send($msg);
 
             return response()->json(['message' => 'Notification sent successfully']);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Send to all devices
+    // ✅ Send to all devices
     public function sendToAll(Request $request)
     {
         try {
@@ -124,39 +142,24 @@ class DeviceTokenController extends Controller
             ]);
 
             $tokens = DeviceToken::pluck('fcm_token')->toArray();
-
             if (empty($tokens)) {
                 return response()->json(['message' => 'No devices registered'], 200);
             }
 
-            $messaging = $this->getMessaging();
             $notification = Notification::create($request->title, $request->message);
-
-            $messages = [];
-            foreach ($tokens as $token) {
-                $msg = CloudMessage::withTarget('token', $token)
-                    ->withNotification($notification)
-                    ->withData([
-                        'deep_link' => $request->deep_link ?? '',
-                        'image'     => $request->image ?? '',
-                    ]);
-                $messages[] = $msg;
-            }
-
-            $report = $messaging->sendAll($messages);
+            $result = $this->sendToTokens($tokens, $notification, $request);
 
             return response()->json([
-                'message'        => 'Notifications sent',
-                'total_sent'     => $report->successes()->count(),
-                'total_failed'   => $report->failures()->count(),
+                'message'      => 'Notifications sent',
+                'total_sent'   => $result['sent'],
+                'total_failed' => $result['failed'],
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Send to multiple selected devices
+    // ✅ Send to multiple selected devices
     public function sendToMultiple(Request $request)
     {
         try {
@@ -168,34 +171,20 @@ class DeviceTokenController extends Controller
                 'deep_link'  => 'nullable|string',
             ]);
 
-            $messaging = $this->getMessaging();
             $notification = Notification::create($request->title, $request->message);
-
-            $messages = [];
-            foreach ($request->fcm_tokens as $token) {
-                $msg = CloudMessage::withTarget('token', $token)
-                    ->withNotification($notification)
-                    ->withData([
-                        'deep_link' => $request->deep_link ?? '',
-                        'image'     => $request->image ?? '',
-                    ]);
-                $messages[] = $msg;
-            }
-
-            $report = $messaging->sendAll($messages);
+            $result = $this->sendToTokens($request->fcm_tokens, $notification, $request);
 
             return response()->json([
                 'message'      => 'Notifications sent',
-                'total_sent'   => $report->successes()->count(),
-                'total_failed' => $report->failures()->count(),
+                'total_sent'   => $result['sent'],
+                'total_failed' => $result['failed'],
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Send to active users (last 7 days)
+    // ✅ Send to active users (last 7 days)
     public function sendToActive(Request $request)
     {
         try {
@@ -215,31 +204,16 @@ class DeviceTokenController extends Controller
                 return response()->json(['message' => 'No active devices found'], 200);
             }
 
-            $messaging = $this->getMessaging();
             $notification = Notification::create($request->title, $request->message);
-
-            $messages = [];
-            foreach ($tokens as $token) {
-                $msg = CloudMessage::withTarget('token', $token)
-                    ->withNotification($notification)
-                    ->withData([
-                        'deep_link' => $request->deep_link ?? '',
-                        'image'     => $request->image ?? '',
-                    ]);
-                $messages[] = $msg;
-            }
-
-            $report = $messaging->sendAll($messages);
+            $result = $this->sendToTokens($tokens, $notification, $request);
 
             return response()->json([
-                'message'      => 'Notifications sent to active users',
-                'total_sent'   => $report->successes()->count(),
-                'total_failed' => $report->failures()->count(),
+                'message'      => 'Notifications sent',
+                'total_sent'   => $result['sent'],
+                'total_failed' => $result['failed'],
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
-
