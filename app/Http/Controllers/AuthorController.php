@@ -27,21 +27,26 @@ class AuthorController extends Controller
         }
     }
 
-    public function topAuthors(Request $request)
-    {
-        try {
-            $limit = $request->query('limit', 3);
-            $cacheKey = 'authors_top_' . $limit;
+public function topAuthors(Request $request)
+{
+    try {
+        $limit  = (int) $request->query('limit', 3);
+        $offset = (int) $request->query('offset', 0);
+        $cacheKey = 'authors_top_' . $limit . '_' . $offset;
 
-            $authors = $this->cachedResponse($cacheKey, function () use ($limit) {
-                return Author::where('is_active', true)->orderBy('display_order', 'asc')->limit($limit)->get();
-            });
+        $authors = $this->cachedResponse($cacheKey, function () use ($limit, $offset) {
+            return Author::where('is_active', true)
+                ->orderBy('display_order', 'asc')
+                ->limit($limit)
+                ->offset($offset)
+                ->get();
+        });
 
-            return response()->json($authors);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($authors);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     public function getBooksByAuthor($name)
     {
